@@ -6,7 +6,9 @@ const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 export async function getCountries(continent) {
     // Fetch from countries table (get all columns, order by country name, limit query to 100 countries)(Slice A)
     let query = client.from('countries').select('*').order('name').limit(100);
-
+    let { data, error } = await client
+        .from('countries')
+        .select('*');
     // query for continent; conditionally add filters if continent exists (Slice C)
     if (continent) {
         query = query.eq('continent', continent);
@@ -19,5 +21,8 @@ export async function getCountries(continent) {
 
 export async function getContinents() {
     // Slice B: write an awaited client query to country_continent table and get all columns
+    let query = client.from('country_continents').select('*');
+    const response = await query;
     // Slice B: return the response
+    return response;
 }
